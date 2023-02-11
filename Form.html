@@ -1,6 +1,7 @@
-<!doctype html>
+<!doctype html> 
 <html lang="en">
  <head>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
   <title>Feedback</title>
   <style>
     label {	float: left;
@@ -13,80 +14,378 @@
       main{
           padding: 50px;
       }
+
+      #destination{
+		margin-left: 150px;
+      }
+
+      #radioButtons{
+        margin-left: 150px;
+      }
+
+      #selectedMeals{
+        margin-left: 150px;
+      }
+
+      #dataTable{
+        padding: 50px;
+        /* margin-left: 50px; */
+        background-color: beige;
+      }
+
+      #dataTable,th,td{
+        border:1px solid;
+	    border-collapse: collapse;
+      }
+
+      #dataTable th,td{
+        padding: 10px;
+      }
+
+      .checkboxs-wrapper {
+        position: relative;
+        }
+    
+        .checkboxs-wrapper input[name="radio-for-required-checkboxes"] {
+        position: absolute;
+        margin: 0;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        -webkit-appearance: none;
+        pointer-events: none;
+        border: none;
+        background: none;
+}
   </style>
  </head>
  <body>
  <div id="container">
 	 
 	 <main>
-	 <h2>Feeback</h2>
+	 <h2>Feedback</h2>
 	 <h3>Love something? Hate something? Let us know!</h3>
 		 Note : Fields marked with an asterisk(*) are mandatory
 		 <br><br>
-		 <form method="post" novalidate>
+		 <form method="post" id="myForm">
 			<label>Title*:</label>
-			<input type="radio" name="title" id="miss" value="miss" required="required"/>Miss
-			<input type="radio" name="title" id="mr" value="mr" required="required"/>Mr.
-			<input type="radio" name="title" id="mrs" value="mrs" required="required"/>Mrs.
+			<input type="radio" name="title" id="miss" value="Miss" required="required"/>Miss
+			<input type="radio" name="title" id="mr" value="Mr" required="required"/>Mr.
+			<input type="radio" name="title" id="mrs" value="Mrs" required="required"/>Mrs.
 			<br><br>
 			<label for="firstName">First Name*:</label>
-			<input type="text" name="firstName" id="firstName" placeholder="First Name" />	
+			<input type="text" name="firstName" id="firstName" placeholder="First Name" required/>	
 			<br><br>
 			
 
 			<label for="lastName">Last Name*:</label>
-			<input type="text" name="lastName" id="lastName" placeholder="Last Name" />
+			<input type="text" name="lastName" id="lastName" placeholder="Last Name" required/>
 			<br><br>
 			
 
 			<label for="emailId">Email Id*:</label>
-			<input type="text" name="emailId" id="emailId" placeholder="yourname@domain.com" />
+			<input type="text" name="emailId" id="emailId" placeholder="yourname@domain.com" required/>
 			<br><br>
 			
+			<div id="error_emailId" style="display: none; color: red;">
+				Invalid input!! Please enter valid Northeastern email id.
+				<br><br>
+			</div>
 
 			<label for="phoneNumber">Phone Number*:</label>
-			<input type="text" name="phoneNumber" id="phoneNumber" placeholder="xxx-xxx-xxxx" />
+			<input type="text" name="phoneNumber" id="phoneNumber" placeholder="xxx-xxx-xxxx" required/>
 			<br><br>
 
+			<div id="error_phoneNumber" style="display: none; color: red;">
+				Invalid input!! Please enter phone number in xxx-xxx-xxxx format.
+				<br><br>
+			</div>
+
 			<label for="streetAddress1">Street Address 1*:</label>
-			<input type="text" name="streetAddress1" id="streetAddress1" placeholder="address" />
+			<input type="text" name="streetAddress1" id="streetAddress1" placeholder="address" required/>
 			<br><br>
 
 			<label for="streetAddress2">Street Address 2:</label>
-			<input type="text" name="streetAddress2" id="streetAddress2" placeholder="address" />
+			<input type="text" name="streetAddress2" id="streetAddress2" placeholder="address"/>
 			<br><br>
 
 			<label for="city">City*:</label>
-			<input type="text" name="city" id="city" placeholder="city" />
+			<input type="text" name="city" id="city" placeholder="city" required/>
 			<br><br>
 
 			<label for="state">State*:</label>
-			<input type="text" name="state" id="state" placeholder="state" />
+			<input type="text" name="state" id="state" placeholder="state" required/>
 			<br><br>
 			
             <label for="zipcode">ZipCode*:</label>
-			<input type="text" name="zipcode" id="zipcode" placeholder="xxxxxx" />
+			<input type="text" name="zipcode" id="zipcode" placeholder="xxxxxx" required/>
 			<br><br>
+
+			<div id="error_zipcode" style="display: none; color: red;">
+				Invalid input!! Please enter valid 6 digit zipcode.
+				<br><br>
+			</div>
              
-            <label for="zipcode">How did you hear*:</label>
-			<input type='checkbox' name="source" value="facebook" /> Facebook
-            <input type='checkbox' name="source" value="google" /> Google
-            <input type='checkbox' name="source" value="yelp" /> Yelp 
-			<br><br> 
-             
-			<label for="comments">Comments*:</label>
-			<textarea name="text" id="comments" placeholder="Your comments" rows="5" cols="25"></textarea>
+            <div class="checkboxs-wrapper">
+            <label for="marketing">How did you hear*:</label>
+            <input id="radio-for-checkboxes" type="radio" name="radio-for-required-checkboxes" required/>
+			<input type='checkbox' name="source" value="Facebook"/> Facebook
+            <input type='checkbox' name="source" value="Google"/> Google
+            <input type='checkbox' name="source" value="Yelp"/> Yelp</div>
 			<br><br>
-			<input type="Submit">
-			<input type="Reset">
+			 
+			<label for="Order">Whic ice-cream flavor did you have?</label>
+            <div id="selectBox" style="clear: both; display: inline">
+            <select name="menu" id="menu" style="max-width: 90%" onchange="getRadioButtons();" onfocus="this.selectedIndex = -1;" required>
+            <option value="" required>Please Select One!!</option>
+            <option value="">Vanilla</option>
+            <option value="Chocolate">Chocolate</option>
+            <option value="Chocolate Chip">Chocolate Chip</option>
+            <option value="Black Current">Black Current</option>
+            <option value="Mango">Mango</option>
+            </select>
+            <br /><br />
+            </div>
+
+            <div id="radioButtons" style="display: none" onclick="addTextBox()" required>
+                <input type="radio" name="eat" id="large" value="Large Meal" />Single Scoop<br />
+                <input type="radio" name="eat" id="medium" value="Medium Meal" />Double Scoop<br />
+                <input type="radio" name="eat" id="small" value="Small Meal" />Mini
+              <br /><br />
+              </div>
+              
+              <label for="how">How was it?*:</label>
+              <div id="selectedMeals">
+              <input type="text" required id="selectedMeal" name="MealInput" style="display: none"/>
+              <br /><br />
+            </div>   
+
+            <label for="comments">Additional Comments*:</label>
+			<textarea name="text" id="comments" placeholder="Your comments" rows="5" cols="25" required></textarea>
+			<br><br>
+
+			<input type="Submit" id="submit" value="Submit My Form">
+			<input type="Reset" id="reset">
 			<br><br>
 		 </form>
+        </div>
+
+        <br><br><br>
+    <div class="table1">
+      <table id="dataTable" style="display:none">
+        <tr>
+          <th>Title</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email Id</th>
+          <th>Phone Number</th>
+          <th>Street Address 1</th>
+          <th>Street Address 2</th>
+          <th>City</th>
+          <th>State</th>
+          <th>ZipCode</th>
+          <th>How did you hear</th>
+          <th>What did you eat</th>
+          <th>Which Meal</th>
+          <th>How was it</th>
+          <th>Comments</th>
+        </tr>
+        <tr id="extraRow" style="display: none;">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+    </div>
 	 </main>
- </div>
 
  <script>
- 
+    var form = document.getElementById("myForm");
+            form.addEventListener("submit", submitted);
+            form.addEventListener("reset",resetForm)
+
+            var validZip = false;
+            var validEmail = false;
+            var validPhone = false;
+
+
+            // regex checks variables
+            var regExZip = /\d{6}$/;
+            var regExEmail = /([\w\.]+)@northeastern.edu/;
+            var regExPhone = /\d{3}-?\d{3}-\d{4}$/;
+
+            var zipcode = document.getElementById("zipcode");
+            zipcode.addEventListener("input", validate);
+
+            var emailId = document.getElementById("emailId");
+            emailId.addEventListener("input", validate);
+
+            var phoneNumber = document.getElementById("phoneNumber");
+            phoneNumber.addEventListener("input", validate);
+
+            function validate(e) {
+                console.log("validate");
+                var value = e.target.value;
+                console.log(value);
+                var type = this.id;
+                var em = "error_" + type;
+
+                switch (type) {
+                    case "zipcode":
+                        if (!value.trim().match(regExZip)) {
+                            document.getElementById(em).style.display = "block";
+                            this.style.border = "2px solid red";
+                            validZip = false;
+                        }
+                        else {
+                            document.getElementById(em).style.display = "none";
+                            this.style.border = "";
+                            validZip = true;
+                        }
+                        break;
+
+                    case "emailId":
+                        if (!value.trim().match(regExEmail)) {
+                            document.getElementById(em).style.display = "block";
+                            this.style.border = "2px solid red";
+                            validEmail = false;
+                        }
+                        else {
+                            document.getElementById(em).style.display = "none";
+                            this.style.border = "";
+                            validEmail = true;
+                        }
+                        break;
+
+                    case "phoneNumber":
+                        if (!value.trim().match(regExPhone)) {
+                            document.getElementById(em).style.display = "block";
+                            this.style.border = "2px solid red";
+                            validPhone = false;
+                        }
+                        else {
+                            document.getElementById(em).style.display = "none";
+                            this.style.border = "";
+                            validPhone = true;
+                        }
+                        break;
+
+
+                }
+
+
+            }
+
+        function getRadioButtons() {
+        var opt=document.getElementById("menu");
+        if(opt.options.selectedIndex==0){
+            document.getElementById("radioButtons").style.display = "none";
+            document.getElementById("selectedMeal").style.display = "none";
+        }
+        else{
+        document.getElementById("radioButtons").style.display = "block";
+        document.getElementById("selectedMeal").style.display = "none";
+        var resetRadioButtons = document.getElementsByName("eat");
+        for (var i = 0; i < resetRadioButtons.length; i++) {
+          resetRadioButtons[i].checked = false;
+        }
+        }
+      }
+
+      function addTextBox() {
+        var eat = document.getElementsByName("eat");
+        for (var i = 0; i < eat.length; i++) {
+          if (eat[i].checked) {
+            document.getElementById("selectedMeal").style.display = "block";
+          }
+        }
+      }
+
+      var inputs = document.querySelectorAll('[name="source"]')
+var radioForCheckboxes = document.getElementById('radio-for-checkboxes')
+function checkCheckboxes () {
+    var isAtLeastOneServiceSelected = false;
+    for(var i = inputs.length-1; i >= 0; --i) {
+        if (inputs[i].checked) isAtLeastOneCheckboxSelected = true;
+    }
+    radioForCheckboxes.checked = isAtLeastOneCheckboxSelected
+}
+for(var i = inputs.length-1; i >= 0; --i) {
+    inputs[i].addEventListener('change', checkCheckboxes)
+}
+
+      function submitted(e) {
+        e.preventDefault();
+        console.log("submitted");
+        if (validZip && validEmail && validPhone) {
+          alert("Data Saved Successfully");
+          populateTable();
+          document.getElementById("reset").click();
+          
+        } else {
+          alert("Please enter correct details");
+        }
+      }
+
+      function populateTable(){
+          var table=document.getElementById("dataTable");
+          var clone1 = document.getElementById("extraRow").cloneNode(true); 
+          var rowCount = table.rows.length;
+          table.style.display="block";
+          clone1.id = "neww";
+          clone1.style.display = "table-row";
+          clone1.children[0].innerText = document.querySelector('input[name="title"]:checked').value;
+          clone1.children[1].innerText = document.getElementById("firstName").value;
+          clone1.children[2].innerText = document.getElementById("lastName").value;
+          clone1.children[3].innerText = document.getElementById("emailId").value;
+          clone1.children[4].innerText = document.getElementById("phoneNumber").value;
+          clone1.children[5].innerText = document.getElementById("streetAddress1").value;
+          clone1.children[6].innerText = document.getElementById("streetAddress2").value;
+          clone1.children[7].innerText = document.getElementById("city").value;
+          clone1.children[8].innerText = document.getElementById("state").value;
+          clone1.children[9].innerText = document.getElementById("zipcode").value;
+          if(document.querySelectorAll('input[name="source"]:checked').length>1){
+            var checkboxes = document.getElementsByName("source");
+            var check = "";
+  
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    check += checkboxes[i].value 
+                        + " ";
+                }
+            }
+            clone1.children[10].innerText = check;
+          }
+          else{
+          clone1.children[10].innerText = document.querySelector('input[name="source"]:checked').value;
+          }
+          var etemp = document.getElementById("menu");
+          clone1.children[11].innerText = etemp.options[etemp.selectedIndex].value;
+          clone1.children[12].innerText = document.querySelector('input[name="eat"]:checked').value;
+          clone1.children[13].innerText = document.getElementById("selectedMeal").value;
+          clone1.children[14].innerText = document.getElementById("comments").value;
+
+          table.appendChild(clone1);
+      }
+      function resetForm(e){
+        document.getElementById("radioButtons").style.display = "none";
+        document.getElementById("selectedMeal").style.display = "none";
+      }
+      
  </script>
 
  </body>
 </html>
+
